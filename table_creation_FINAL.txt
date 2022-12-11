@@ -1,0 +1,339 @@
+SET TIMING ON
+SET LINESIZE 500
+SET FEEDBACK ON
+SET NUMWIDTH 6
+SET PAGESIZE 50000
+
+1.
+DROP TABLE Patient CASCADE CONSTRAINTS;
+CREATE TABLE Patient(patientGovtID NUMBER(9) NOT NULL,
+	fName VARCHAR2(30) NOT NULL,
+	lName VARCHAR2(30) NOT NULL,
+	DOB DATE NOT NULL,
+	gender CHAR(1) CHECK (gender IN ('M','F','N','O')),
+	race VARCHAR2(35),
+	street VARCHAR2(35),
+	city VARCHAR2(35),
+	state VARCHAR2(2),
+	zip NUMBER(5) NOT NULL,
+	resident CHAR(1) CHECK (resident IN ('T','F')),
+	CONSTRAINT patient_pk PRIMARY KEY (patientGovtID));
+
+
+INSERT INTO Patient VALUES (501441182,'Vernon','Lopez','18-Dec-70','M','White','2322 Barring Street','Philadelphia','PA',29460,'T');
+INSERT INTO Patient VALUES (329832500,'Beth','Gonzalez','14-Nov-71','F','Asian','4247 Powelton Street','Philadelphia','PA',54570,'T');
+INSERT INTO Patient VALUES (531216572,'Lee','Martin','31-Aug-72','F','White','3596 Spring Garden Street','Philadelphia','PA',90931,'T');
+INSERT INTO Patient VALUES (205700649,'Carolyn','Thompson','08-Jul-73','F','White','8285 Chestnut Street','Philadelphia','PA',39187,'T');
+INSERT INTO Patient VALUES (804401626,'Judith','Martinez','11-Jul-78','F','Black or African American','4169 Walnut Street','Jersey City','NJ',13961,'F');
+INSERT INTO Patient VALUES (262464379,'Janet','White','19-May-79','F','Hispanic','1148 Market Street','Jersey City','NJ',77347,'F');
+INSERT INTO Patient VALUES (465443742,'Sheila','Lee','15-Mar-80','F','White','4474 Hamilton Street','Boston','MA',35717,'F');
+INSERT INTO Patient VALUES (418557292,'Paul','Martin','10-May-80','M','Hispanic','6549 Washington Street','Boston','MA',67085,'F');
+INSERT INTO Patient VALUES (396968950,'Marlin','Anderson','15-Sep-80','M','White','5527 Albany Street','Philadelphia','PA',51251,'T');
+INSERT INTO Patient VALUES (409631164,'Alfred','Rodriguez','29-Dec-80','M','Black or African American','9969 Spring Garden Street','Philadelphia','PA',76831,'T');
+INSERT INTO Patient VALUES (137502173,'Karen','Rodriguez','13-Mar-82','F','White','7271 Chestnut Street','Philadelphia','PA',57119,'T');
+INSERT INTO Patient VALUES (395435114,'Paul','Rodriguez','25-Oct-83','M','Asian','7333 Walnut Street','San Francisco','CA',89874,'F');
+INSERT INTO Patient VALUES (509261503,'Annie','Jones','06-Feb-85','F','Asian','8378 Washington Street','Los Angelus','CA',56946,'F');
+INSERT INTO Patient VALUES (432860821,'Nancy','Taylor','04-Oct-85','F','Hispanic','5419 Hamilton Street','Los Angelus','CA',29815,'F');
+INSERT INTO Patient VALUES (859222648,'Barbara','Wilson','13-Jan-89','F','White','5806 Barring Street','Philadelphia','PA',22105,'T');
+INSERT INTO Patient VALUES (158322143,'Justin','Taylor','09-Feb-89','M','White','1109 Powelton Street','Philadelphia','PA',63676,'T');
+INSERT INTO Patient VALUES (619318524,'Carmen','Thompson','06-May-91','F','White','6053 Lancaster Street','Philadelphia','PA',40811,'T');
+INSERT INTO Patient VALUES (325446370,'Jessica','White','15-Jun-92','F','White','7209 Chestnut Street','Philadelphia','PA',48601,'T');
+INSERT INTO Patient VALUES (598672508,'Dianne','Thomas','26-Sep-92','F','White','8288 Walnut Street','Philadelphia','PA',16881,'T');
+INSERT INTO Patient VALUES (710953798,'David','Lopez','21-Jan-94','M','White','5989 Market Street','Philadelphia','PA',81244,'T');
+INSERT INTO Patient VALUES (116724777,'Larry','Lee','18-Feb-95','M','White','4002 Hamilton Street','Philadelphia','PA',46433,'T');
+INSERT INTO Patient VALUES (567850049,'Mary','Moore','03-Nov-96','F','White','6545 Barring Street','Philadelphia','PA',24930,'T');
+INSERT INTO Patient VALUES (430715815,'James','Jones','20-Jul-97','M','White','4262 Powelton Street','Austin','TX',92841,'F');
+INSERT INTO Patient VALUES (942117053,'Billy','Taylor','23-Mar-98','M','White','5091 Lancaster Street','Huston','TX',32198,'F');
+INSERT INTO Patient VALUES (210255329,'Margie','White','25-Oct-99','F','White','8545 Chestnut Street','College Station','TX',77164,'F');
+INSERT INTO Patient VALUES (126017218,'Eileen','Thompson','31-Mar-74','F','White','7355 Walnut Street','Philadelphia','PA',46006,'T');
+INSERT INTO Patient VALUES (808594069,'Marion','Miller','19-Dec-74','F','Black or African American','3734 Market Street','Philadelphia','PA',86220,'T');
+INSERT INTO Patient VALUES (102782412,'Maureen','Hernandez','10-Mar-75','F','White','3034 Hamilton Street','Boston','MA',45945,'F');
+INSERT INTO Patient VALUES (982218533,'Cynthia','Thompson','21-Jul-77','F','White','1918 Barring Street','Boston','MA',24931,'F');
+INSERT INTO Patient VALUES (616202629,'John','Thompson','28-Jun-78','M','White','2548 Powelton Street','Philadelphia','PA',29815,'T');
+
+commit;
+SELECT COUNT(*) FROM Patient;
+
+2.
+DROP TABLE PatientCondition;
+CREATE TABLE PatientCondition (diseaseName VARCHAR2(30) NOT NULL,
+	dateOfOnset DATE NOT NULL,
+	diseaseType VARCHAR2(7) NOT NULL ,
+	CHECK(diseaseType IN ('acute','chronic')),
+	patientGovtID NUMBER(9) NOT NULL,
+	CONSTRAINT PatienCondition_pk PRIMARY KEY (diseaseName, patientGovtID),
+	CONSTRAINT PatientCondition_fk FOREIGN KEY (patientGovtID)
+		REFERENCES Patient(patientGovtID) ON DELETE CASCADE);
+		
+INSERT INTO PatientCondition VALUES ('Diabetes','29-Dec-17','acute',501441182);
+INSERT INTO PatientCondition VALUES ('Heart Conditions','16-Mar-18','chronic',329832500);
+INSERT INTO PatientCondition VALUES ('Lung Conditions','18-Mar-18','chronic',531216572);
+INSERT INTO PatientCondition VALUES ('Cancer','19-Jun-18','chronic',205700649);
+INSERT INTO PatientCondition VALUES ('HIV','17-Dec-18','chronic',804401626);
+INSERT INTO PatientCondition VALUES ('Diabetes','23-Dec-18','acute',262464379);
+INSERT INTO PatientCondition VALUES ('Diabetes','23-Feb-19','acute',465443742);
+INSERT INTO PatientCondition VALUES ('Diabetes','20-Mar-19','acute',418557292);
+INSERT INTO PatientCondition VALUES ('Heart Conditions','11-Aug-19','chronic',396968950);
+INSERT INTO PatientCondition VALUES ('Heart Conditions','06-Sep-19','chronic',409631164);
+INSERT INTO PatientCondition VALUES ('Diabetes','09-Sep-19','acute',137502173);
+INSERT INTO PatientCondition VALUES ('Cerebrovascular Disease','02-May-20','acute',395435114);
+INSERT INTO PatientCondition VALUES ('Heart Conditions','17-Aug-20','chronic',509261503);
+INSERT INTO PatientCondition VALUES ('Heart Conditions','07-Sep-20','chronic',432860821);
+INSERT INTO PatientCondition VALUES ('Cerebrovascular Disease','21-Sep-20','acute',859222648);
+INSERT INTO PatientCondition VALUES ('Cerebrovascular Disease','21-May-21','acute',158322143);
+INSERT INTO PatientCondition VALUES ('Pregnancy','03-Sep-21','acute',619318524);
+INSERT INTO PatientCondition VALUES ('Pregnancy','06-Dec-21','acute',325446370);
+INSERT INTO PatientCondition VALUES ('Cancer','16-May-22','chronic',598672508);
+INSERT INTO PatientCondition VALUES ('Cancer ','25-Jun-22','chronic',710953798);
+
+commit;
+
+SELECT COUNT(*) FROM PatientCondition;
+
+
+3.
+DROP TABLE InsurancePlan;
+CREATE TABLE InsurancePlan(insuranceMemberNumber NUMBER(7) NOT NULL,
+groupNumber VARCHAR2(15) NOT NULL,
+carrierName VARCHAR2(50) NOT NULL,
+patientGovtID NUMBER(9) NOT NULL,
+CONSTRAINT Insurance_Number_PK PRIMARY KEY (insuranceMemberNumber),
+CONSTRAINT Insurance_FK1 FOREIGN KEY (patientGovtID) 
+	REFERENCES Patient(patientGovtID) ON DELETE CASCADE);
+
+INSERT INTO InsurancePlan VALUES (3613544,'F915063216','Cigna',137502173);
+INSERT INTO InsurancePlan VALUES (5490435,'R993072683','UPMC',262464379);
+INSERT INTO InsurancePlan VALUES (2124746,'L667565808','Aetna',329832500);
+INSERT INTO InsurancePlan VALUES (9126645,'I812751534','Aetna',395435114);
+INSERT INTO InsurancePlan VALUES (7122932,'F836002087','United Healthcare',418557292);
+INSERT INTO InsurancePlan VALUES (5950160,'M562538391','Independence Blue Cross',430715815);
+INSERT INTO InsurancePlan VALUES (3633525,'V195538089','United Healthcare',465443742);
+INSERT INTO InsurancePlan VALUES (8435092,'Z246515222','Aetna Better Health',501441182);
+INSERT INTO InsurancePlan VALUES (812856,'G404955567','Independence Blue Cross',509261503);
+INSERT INTO InsurancePlan VALUES (8515878,'U720317716','Independence Blue Cross',531216572);
+INSERT INTO InsurancePlan VALUES (7451963,'Y682104925','UPMC',598672508);
+INSERT INTO InsurancePlan VALUES (3903776,'Q962677660','Cigna',619318524);
+
+commit;
+
+SELECT COUNT(*) FROM InsurancePlan;
+
+
+4.
+DROP TABLE Manufacturer CASCADE CONSTRAINTS;
+CREATE TABLE Manufacturer (siteID NUMBER(3) NOT NULL,
+	pharamceutuicalCompanyName VARCHAR(35) NOT NULL,
+	street VARCHAR(35),
+	city VARCHAR(25),
+	state VARCHAR(2),
+	zip NUMBER(5) NOT NULL,
+	CONSTRAINT Manufacturer_pk PRIMARY KEY (siteID));
+
+INSERT INTO Manufacturer VALUES (110,'3M Health Care Business','3M Cener','St.Paul','MN',55144);
+INSERT INTO Manufacturer VALUES (111,'A and Z Pharmaceuticals Inc','350 Wireless Blvd','Hauppauge','NY',11788);
+INSERT INTO Manufacturer VALUES (112,'Aavis Pharmaceuticals','9488 Jackson Trail Road','Hoschton','GA',30548);
+INSERT INTO Manufacturer VALUES (113,'Abbott Laboratories','100 Abbott Park Road','Abbott Park','IL',60064);
+INSERT INTO Manufacturer VALUES (114,'AbbVie Inc','1 N Waukegan Road','North Chicago ','IL',60064);
+INSERT INTO Manufacturer VALUES (115,'Aegerion Pharmaceuticlas ','245 First Street','Cambridge','MA',2142);
+INSERT INTO Manufacturer VALUES (116,'Spark Therapeutics, Inc','3737 Market Street','Philadelphia','PA',19104);
+INSERT INTO Manufacturer VALUES (117,'Pfizer Inc','235 East 42nd Street','New York','NY',10017);
+INSERT INTO Manufacturer VALUES (118,'Novavax','20 Firstfield Road','Gaithersburg','MD',20878);
+INSERT INTO Manufacturer VALUES (119,'Johnson and Johnson','One Johnson and Johnson Plaza','New Brunswick','NJ',8933);
+INSERT INTO Manufacturer VALUES (120,'GlaxoSmithKline','5 Crescent Drive','Philadelphia','PA',19112);
+INSERT INTO Manufacturer VALUES (121,'AstraZeneca Pharmaceuticals','1800 Concord Pike','Wilmington','DE',19850);
+
+commit;
+
+SELECT COUNT(*) FROM Manufacturer;
+
+5.  
+
+DROP TABLE VaccineSite CASCADE CONSTRAINTS;
+CREATE TABLE VaccineSite ( locationID VARCHAR2(5) NOT NULL, siteName VARCHAR2(100) NOT NULL, street VARCHAR2(35), city VARCHAR2(25), state VARCHAR2(2), zip NUMBER(5) NOT NULL, type VARCHAR2(10) CHECK (type IN ('Hospital','Pharmacy','Clinic')),CONSTRAINT VaccineSite_PK PRIMARY KEY (LocationID));
+
+	
+INSERT INTO VaccineSite VALUES ('4XVU5','Rite Aid','339 Spring Garden Street','Philadelphia','PA',19123,'Pharmacy');
+INSERT INTO VaccineSite VALUES ('DLWL5','Patient Care Pharmacy','801 21 Washington Avenue ','Philadelphia','PA',19147,'Pharmacy');
+INSERT INTO VaccineSite VALUES ('VUYD5','Tang Clinic','900 N Broad Street','Philadelphia','PA',19130,'Clinic');
+INSERT INTO VaccineSite VALUES ('N8W25','Cvs Pharmacy, Inc','3401 Walnut Street','Philadelphia','PA',19104,'Pharmacy');
+INSERT INTO VaccineSite VALUES ('VZUJV','Childrens Hospital of Philadelphia','3401 Civic Center Boulevard','Philadelphia','PA',19104,'Hospital');
+INSERT INTO VaccineSite VALUES ('AZP9Z','Health Center6','301 23 Girard Avenue ','Philadelphia','PA',19123,'Clinic');
+INSERT INTO VaccineSite VALUES ('SKR3Q','My Doc Urgent Care','1501 North Broad Street','Philadelphia','PA',19122,'Clinic');
+INSERT INTO VaccineSite VALUES ('YACCC','Acme Pharmacy','180 West Girard Avenue ','Philadelphia','PA',19123,'Pharmacy');
+INSERT INTO VaccineSite VALUES ('LJQPQ','Walgreens Co','2014 South Broad','Philadelphia','PA',19145,'Pharmacy');
+INSERT INTO VaccineSite VALUES ('ECTCL','Fishtown Pharmacy','1802 Frankforad Ave','Philadelphia','PA',19125,'Pharmacy');
+
+commit;
+
+SELECT COUNT(*) FROM VaccineSite;
+
+
+6.
+DROP TABLE VaccineShipment CASCADE CONSTRAINTS;
+CREATE TABLE VaccineShipment (siteID NUMBER(3) NOT NULL,
+ 	trackingNumber VARCHAR(13) NOT NULL,
+ 	batchNumber VARCHAR(9) NOT NULL,
+ quantity NUMBER(5),
+ 	cost NUMBER(10),
+ 	shipmentDate DATE NOT NULL,
+ 	storageTemperature NUMBER(2) NOT NULL,
+ 	expirationDate DATE NOT NULL,
+ 	locationID VARCHAR(5) NOT NULL,
+ 	CONSTRAINT VaccineShipment_PK PRIMARY KEY (siteID, trackingNumber),
+ 	CONSTRAINT VaccineShipment_FK1 FOREIGN KEY (siteID)
+		REFERENCES Manufacturer(siteID) ON DELETE CASCADE,
+ 	CONSTRAINT VaccineShipment_FK2 FOREIGN KEY (locationID)
+		REFERENCES VaccineSite(locationID) ON DELETE CASCADE);
+
+INSERT INTO  VaccineShipment VALUES (110,'RA197721235US','N2CDN6BF',15000,364800,'05-Jan-22',36,'04-Feb-22','4XVU5');
+INSERT INTO  VaccineShipment VALUES (111,'RA990682171US','FGTM7BHJ',10000,243200,'17-Mar-22',36,'16-Apr-22','DLWL5');
+INSERT INTO  VaccineShipment VALUES (112,'RA979787921US','EQM3PW25',20000,486400,'05-Jan-22',40,'04-Feb-22','VUYD5');
+INSERT INTO  VaccineShipment VALUES (113,'RA051601786US','68GK8PVQ',30000,729600,'12-May-22',40,'11-Jun-22','N8W25');
+INSERT INTO  VaccineShipment VALUES (114,'RA681501686US','XGN79X85',10000,243200,'17-Oct-22',36,'16-Nov-22','VZUJV');
+INSERT INTO  VaccineShipment VALUES (115,'RA715042350US','F85NARHY',10000,243200,'09-Nov-22',42,'09-Dec-22','AZP9Z');
+INSERT INTO  VaccineShipment VALUES (116,'RA283748029US','3YXAJQ8Z',15000,364800,'17-Oct-22',42,'16-Nov-22','SKR3Q');
+INSERT INTO  VaccineShipment VALUES (117,'RA276727743US','LEZQP33S',20000,486400,'09-Nov-22',36,'09-Dec-22','YACCC');
+INSERT INTO  VaccineShipment VALUES (118,'RA495677722US','GYYT4CYE',20000,486400,'04-Jun-22',40,'04-Jul-22','LJQPQ');
+INSERT INTO  VaccineShipment VALUES (119,'RA053183288US','L58TSPCW',15000,364800,'04-Jun-22',36,'04-Jul-22','ECTCL');
+INSERT INTO  VaccineShipment VALUES (120,'RA053183270US','L58TSPK5',15000,364800,'12-May-22',41,'11-Jun-22','4XVU5');
+INSERT INTO  VaccineShipment VALUES (121,'RA062353288US','MP8TSPCW',10000,243200,'18-Mar-22',32,'17-Apr-22','DLWL5');
+INSERT INTO  VaccineShipment VALUES (115,'RA053353452US','OP8TSPCW',12000,291840,'01-Apr-22',36,'01-May-22','VUYD5');
+INSERT INTO  VaccineShipment VALUES (114,'RA053353444US','REM7TSPCW',13000,316160,'01-Apr-22',37,'01-May-22','N8W25');
+INSERT INTO  VaccineShipment VALUES (117,'RA053353555US','QWE4SPCW',14000,340480,'15-Mar-22',40,'14-Apr-22','VZUJV');
+
+commit;
+SELECT COUNT(*) FROM VaccineShipment;
+
+
+
+7. 
+DROP TABLE Vaccinator CASCADE CONSTRAINTS; 
+CREATE TABLE VACCINATOR(licenseNumber number(7),
+fname varchar2(20) NOT NULL,
+lname varchar2(20) NOT NULL,
+credentials char(3) NOT NULL,
+constraint VACCINATOR_PK primary key (licenseNumber));
+
+INSERT INTO Vaccinator VALUES (4251873,'Alex','Morgan','RN');
+INSERT INTO Vaccinator VALUES (6751832,'Micheal','Lee','BSN');
+INSERT INTO Vaccinator VALUES (3365823,'Ashely','Lewis','MD');
+INSERT INTO Vaccinator VALUES (9276321,'Kylian','Cole','DO');
+INSERT INTO Vaccinator VALUES (2467122,'Ravi','Singh','NP');
+INSERT INTO Vaccinator VALUES (9123568,'Kim','Green','PA');
+INSERT INTO Vaccinator VALUES (5420092,'John','Richardson','BSN');
+INSERT INTO Vaccinator VALUES (8123568,'Paul','Rodriguez','BSN');
+INSERT INTO Vaccinator VALUES (1238979,'Sandhya','Nayak','DO');
+INSERT INTO Vaccinator VALUES (7654563,'Jessica','Pearson','MD');
+INSERT INTO Vaccinator VALUES (2286573,'Alex','Williams','NP');
+INSERT INTO Vaccinator VALUES (6732562,'Henry','Martin','RN');
+INSERT INTO Vaccinator VALUES (7029554,'Eden','Hazard','MD');
+INSERT INTO Vaccinator VALUES (2223571,'Kevin','Durant','RN');
+
+commit;
+
+SELECT COUNT(*) FROM Vaccinator;
+
+
+8.
+DROP TABLE  Employment CASCADE CONSTRAINTS; 
+
+CREATE TABLE Employment(licenseNumber NUMBER(7),
+	locationID VARCHAR2(5) NOT NULL,
+	CONSTRAINT Employment_Vaccinator_FK FOREIGN KEY (licenseNumber) 
+	REFERENCES Vaccinator(licenseNumber) ON DELETE CASCADE,
+	CONSTRAINT Employment_VaccinationSite_FK FOREIGN KEY (locationID) 
+	REFERENCES VaccineSite(locationID) ON DELETE CASCADE);
+
+INSERT INTO Employment VALUES ('4251873','4XVU5');
+INSERT INTO Employment VALUES ('6751832','DLWL5');
+INSERT INTO Employment VALUES ('3365823','4XVU5');
+INSERT INTO Employment VALUES ('9276321','DLWL5');
+INSERT INTO Employment VALUES ('2467122','VUYD5');
+INSERT INTO Employment VALUES ('9123568','VZUJV');
+INSERT INTO Employment VALUES ('5420092','AZP9Z');
+INSERT INTO Employment VALUES ('8123568','SKR3Q');
+INSERT INTO Employment VALUES ('1238979','YACCC');
+INSERT INTO Employment VALUES ('7654563','YACCC');
+INSERT INTO Employment VALUES ('2286573','LJQPQ');
+INSERT INTO Employment VALUES ('6732562','ECTCL');
+INSERT INTO Employment VALUES ('7029554','N8W25');
+INSERT INTO Employment VALUES ('2223571','DLWL5');
+
+commit;
+
+SELECT COUNT(*) FROM Employment;
+
+
+9.
+DROP TABLE VaccineCard CASCADE CONSTRAINTS;
+CREATE TABLE VaccineCard(recordNumber VARCHAR2(11) NOT NULL,
+activationDate DATE NOT NULL,
+patientGovtID NUMBER(9) NOT NULL,
+CONSTRAINT Vaccine_Card_PK PRIMARY KEY (recordNumber),
+CONSTRAINT Insurance_FK2 FOREIGN KEY (patientGovtID) 
+	REFERENCES Patient(patientGovtID) ON DELETE CASCADE);
+
+INSERT INTO VaccineCard VALUES ('AC594917592','27-Nov-20',137502173);
+INSERT INTO VaccineCard VALUES ('VX535637014','06-Dec-20',262464379);
+INSERT INTO VaccineCard VALUES ('IO168290455','22-Mar-21',329832500);
+INSERT INTO VaccineCard VALUES ('MB883971290','27-Jul-21',395435114);
+INSERT INTO VaccineCard VALUES ('TX801959860','14-Oct-21',418557292);
+INSERT INTO VaccineCard VALUES ('BR931855359','22-Oct-21',430715815);
+INSERT INTO VaccineCard VALUES ('RD221479910','25-Oct-21',465443742);
+INSERT INTO VaccineCard VALUES ('VC478976579','08-Nov-21',501441182);
+INSERT INTO VaccineCard VALUES ('YT484923176','17-Dec-21',509261503);
+INSERT INTO VaccineCard VALUES ('TI978077698','24-Jan-22',531216572);
+INSERT INTO VaccineCard VALUES ('TD615901777','24-Mar-22',598672508);
+INSERT INTO VaccineCard VALUES ('MR755526247','15-Oct-22',619318524);
+
+commit;
+
+SELECT COUNT(*) FROM VaccineCard;
+
+
+10.
+
+DROP TABLE VaccineDose CASCADE CONSTRAINTS; 
+CREATE TABLE VaccineDose(serialNumber VARCHAR2(10) NOT NULL,
+vaccineName VARCHAR2(20) NOT NULL,
+administeredDate DATE NOT NULL,
+siteID NUMBER(3) NOT NULL,
+trackingNumber VARCHAR(13) NOT NULL,
+patientGovtID NUMBER(9) NOT NULL,
+recordNumber VARCHAR2(11) NOT NULL,
+locationID VARCHAR(5) NOT NULL,
+licenseNumber NUMBER(7) NOT NULL,
+patientVaccineNumber VARCHAR2(20) NOT NULL,
+adverseReactionType VARCHAR2(20),
+adverseReactionDescription VARCHAR2(100),
+adverseReactionBeginDate DATE,
+adverseReactionEndDate DATE,
+CONSTRAINT VaccineDose_PK PRIMARY KEY (serialNumber),
+CONSTRAINT VaccineDose_VaccineShipment_FK FOREIGN KEY (siteID,trackingNumber) 
+	REFERENCES  VaccineShipment(siteID,trackingNumber) ON DELETE CASCADE, 
+CONSTRAINT VaccineDose_Patient_FK FOREIGN KEY (patientGovtID)
+	REFERENCES Patient (patientGovtID) ON DELETE CASCADE,
+CONSTRAINT VaccineDose_RecordNumber_FK FOREIGN KEY (recordNumber)
+	REFERENCES VaccineCard (recordNumber) ON DELETE CASCADE,
+CONSTRAINT  VaccineDose_Employment_FK FOREIGN KEY (locationID)
+	REFERENCES VaccineSite (locationID) ON DELETE CASCADE,
+CONSTRAINT VaccineDose_Employment_FK2 FOREIGN KEY (licenseNumber)
+	REFERENCES Vaccinator (licenseNumber) ON DELETE CASCADE);
+
+
+INSERT INTO VACCINEDOSE VALUES ('EP6955','Pfizer','10-OCT-2021','110','RA197721235US','329832500','VX535637014','4XVU5','4251873',3,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('QA2915','Moderna','11-JAN-2021','111','RA990682171US','531216572','RD221479910','DLWL5','6751832',2,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('EP4332','Novavax','22-MAR-2021','111','RA990682171US','465443742','MR755526247','4XVU5','3365823',1,'Nausea',NULL,'23-MAR-2021','24-MAR-2021');
+INSERT INTO VACCINEDOSE VALUES ('RR1925','Johnson and Johnson','29-AUG-2022','119','RA053183288US','509261503','BR931855359','DLWL5','9276321','1','Hives',NULL,'30-AUG-2022','04-SEP-2022');
+INSERT INTO VACCINEDOSE VALUES ('MN9995','Moderna','18-SEP-2022','117','RA276727743US','804401626','YT484923176','VUYD5','2467122',2,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('NM1234','Pfizer','20-MAY-2022','110','RA197721235US','137502173','TX801959860','VUYD5','2467122',1,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('RX9868','Novavax','30-DEC-2021','115','RA715042350US','501441182','AC594917592','VZUJV','9123568',4,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('ZX1950','Johnson and Johnson','17-JUN-2022','112','RA979787921US','395435114','IO168290455','AZP9Z','5420092',1,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('BP4850','Pfizer','05-MAY-2021','121','RA062353288US','619318524','TI978077698','SKR3Q','8123568',1,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('UY1932','Novavax','04-AUG-2022','110','RA197721235US','430715815','TD615901777','YACCC','1238979',3,NULL,NULL,NULL,NULL);
+INSERT INTO VACCINEDOSE VALUES ('JK6933','Johnson and Johnson','12-NOV-2021','115','RA715042350US','262464379','VC478976579','YACCC','7654563','1','Nausea',NULL,'13-NOV-2021','15-NOV-2021');
+INSERT INTO VACCINEDOSE VALUES ('LJ1951','Pfizer','12-FEB-2022','110','RA197721235US','598672508','MB883971290','LJQPQ','2286573', 2,'Headache',NULL,'13-FEB-2022','16-FEB-2022');
+
+commit;
+
+SELECT COUNT(*) FROM VACCINEDOSE;
