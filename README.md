@@ -127,3 +127,159 @@ As the COVID-19 pandemic is still ongoing and continues to be a dynamic situatio
 
 
 ![Project Conceptual ERD](https://user-images.githubusercontent.com/96182727/206881086-88eca4fd-a576-4e91-8d9c-7f78972f25e9.png)
+
+<b> Explanations on the ERD  </b>
+
+- A patient may or may not suffer from a pre-existing condition prior to receiving a vaccine. As a pre-existing condition cannot exist independently of a patient, it is treated as a weak entity with optional participation. 
+
+- Post first vaccination, every patient will receive a vaccine card which contains details about the vaccines administered to that patient. Because we are tracking both vaccinated and unvaccinated individuals, there is optional participation for a patient in the vaccine card. 
+
+- Additionally, post vaccination, patients may or may not experience adverse reactions. Without an instance of a patient receiving a vaccine, an adverse reaction would not exist and thus, data associated with adverse reactions to a vaccine are treated as relationship attributes on the patient-vaccine relationship. 
+
+- In Philadelphia, a patient may or may not have insurance, which is marked by optional participation for a patient in the insurance plan relationship. 
+
+- A patient’s vaccination status could be either unvaccinated, partially vaccinated, fully vaccinated, fully vaccinated with a single booster, or fully vaccinated with a double booster, and is tracked in the patient-vaccine dose relationship as a relationship attribute “patientVaccineNumber” to indicate which Covid vaccination in the series this was for the patient. 
+
+- We have assumed that a vaccination center could have all types of vaccines.  
+
+- A pharmaceutical company that makes COVID-19 vaccines could have multiple locations that manufacture and ship vaccines, each of which is uniquely identified by a siteID in the manufacturer entity. 
+
+- Vaccines arrive at a vaccination site in a shipment. Each batch of vaccines could be split into multiple shipments, which is why we decided to use the vaccine shipment tracking number as the partial primary key of a vaccine shipment. 
+
+- A vaccinator can work for multiple vaccination sites and a vaccination site could have multiple vaccinators employed, reflected in the many to many relationships between these entities.  
+
+![info605_Final_ERD-Logical ](https://user-images.githubusercontent.com/96182727/206881141-42c7895e-0643-41c3-9c68-24b41a985634.png)
+
+<b> 5.2 Relational Schema </b>
+
+- Patient (patientGovtID, firstName, lastName, DOB, gender, race, street, city, state, zip, resident) 
+
+- PatientCondition (patientGovtID, diseaseName, dateOfOnset, diseaseType) 
+
+Foreign key patientGovtID references Patient (patientGovtID) 
+
+- InsurancePlan (insuranceMemberNumber, groupNumber, carrierName, patientGovtID) 
+
+Foreign key patientGovtID references Patient (patientGovtID) 
+
+- Manufacturer (siteID, pharmaceuticalCompany, street, city, state, zip) 
+
+- VaccinationSite (locationID, siteName, street, city, state, zip, type) 
+
+- VaccineShipment(siteID, trackingNumber, batchNumber, quantity, cost, shipmentDate, storageTemperature, expirationDate, locationID) 
+
+Foreign key siteID references Manufacturer (siteID) 
+
+Foreign key locationID references VaccinationSite (locationID) 
+
+- Vaccinator (licenseNumber, firstName, lastName, credentials) 
+
+- Employment (licenseNumber, locationID) 
+
+Foreign key licenseNumber references Vaccinator (licenseNumber) 
+
+Foreign key locationID references VaccinationSite (locationID) 
+
+- VaccineCard (recordNumber, activationDate, patientGovtID) 
+
+Foreign key patientGovtID references Patient (patientGovtID) 
+
+- VaccineDose (serialNumber, vaccineName, administeredDate, patientGovtID, locationID, licenseNumber, shipmentID, vaccineCardNumber, patientVaccineNumber, adverseReactionType, adverseReactionDescription, adverseReactionBeginDate, adverseReactionEndDate) 
+
+Foreign key patientGovtID references Patient (patientGovtID) 
+
+Foreign key locationID references VaccinationSite (locationID) 
+
+Foreign key licenseNumber references Vaccinator (licenseNumber) 
+
+Foreign key shipmentID references VaccineShipment (siteID, trackingNumber) 
+
+Foreign key vaccineCardNumber references VaccineCard (recordNumber) 
+
+<b> (4) DATA DICTIONARY </b>
+
+<b> 4.1 Data Dictionary </b>
+<img width="838" alt="Screenshot 2022-12-10 at 7 49 30 PM" src="https://user-images.githubusercontent.com/96182727/206881454-31003aa8-6fcf-40ae-a4d8-e28e10ca26ec.png">
+
+<b> 4.2 Patient </b>
+
+<img width="802" alt="data dictionary - patient" src="https://user-images.githubusercontent.com/96182727/206881685-8f86e376-621f-431d-aa1f-5aeb855aadf4.png">
+
+<b> 4.3 Patient Condition </b>
+
+<img width="836" alt="patient condition" src="https://user-images.githubusercontent.com/96182727/206881713-9648f45f-081a-4ab4-9a09-3b3767f01359.png">
+
+<b> 4.4 Insurance Plan </b>
+
+<img width="803" alt="insurance Plan" src="https://user-images.githubusercontent.com/96182727/206881734-ec83e1c4-65bb-4916-b8a3-2cee83997303.png">
+
+<b> 4.5 Manufacturer </b>
+
+<img width="805" alt="data dictionary manufacturer" src="https://user-images.githubusercontent.com/96182727/206881761-adc85602-6eb4-4269-8c5c-4a2f58a3ebe9.png">
+
+<b> 4.6 Vaccine Site </b>
+
+<img width="590" alt="vaccine site" src="https://user-images.githubusercontent.com/96182727/206881829-737c8731-7e6d-43e2-a043-2e581f5336be.png">
+
+<b> 4.7 Vaccine Shipment </b>
+
+<img width="796" alt="vaccineshipment" src="https://user-images.githubusercontent.com/96182727/206881843-5866610c-325f-4f55-977d-b6386c15a3b9.png">
+
+<b> 4.8 Vaccinator </b>
+
+<img width="802" alt="vaccinator" src="https://user-images.githubusercontent.com/96182727/206881851-cbdad549-8893-4607-ab1e-3d8cdfb71d33.png">
+
+<b> 4.9 Employment </b>
+
+<img width="783" alt="employement" src="https://user-images.githubusercontent.com/96182727/206881872-e9a5a512-14e8-43eb-8c51-bee500658975.png">
+
+<b> 4.10 Vaccine Card </b>
+
+<img width="782" alt="vaccinecard" src="https://user-images.githubusercontent.com/96182727/206881879-2a77e3bb-bd92-4bf0-99af-2e59a3790023.png">
+
+<b> 4.11 Vaccine Dose </b>
+
+<img width="607" alt="Vaccinedose" src="https://user-images.githubusercontent.com/96182727/206881884-1ff21f29-41e3-4b19-9a69-7e94dd541559.png">
+
+<b> (5) Implmentation </b>
+
+<b> 5.1 Data Queries </b>
+
+<b> 5.1.1 Find the Age of patients with Chronic Disease. List lname, fname, and disease name. Sort by patient lname. </b>
+
+<img width="831" alt="Screenshot 2022-12-04 at 5 19 49 PM" src="https://user-images.githubusercontent.com/96182727/206882416-e42edbe1-1ad2-47ce-beda-ff88df032570.png">
+
+<b> 5.1.2 which is the least used vaccine name along with its administered date and their record number? </b>
+
+<img width="1034" alt="Screenshot 2022-12-04 at 5 20 41 PM" src="https://user-images.githubusercontent.com/96182727/206882454-e9094d79-dcee-453a-bc0a-40351a4d93a5.png">
+
+<b> 5.1.3 Patients who are residents of Philadelphia with activation date between 01-NOV-2020 to 01-JAN-2022 and their address? </b>
+
+<img width="902" alt="Screenshot 2022-12-04 at 5 24 12 PM" src="https://user-images.githubusercontent.com/96182727/206882470-e7666a85-fb8c-4809-a585-40db3185cd77.png">
+
+<b> 5.2 Data Manupilation Queries </b>
+
+<b> 5.2.1 Scenario: If the data has been entered wrong by mistake in the patient condition and need to update it. </b>
+
+<img width="498" alt="Screenshot 2022-12-04 at 6 17 19 PM" src="https://user-images.githubusercontent.com/96182727/206882516-ad81cd23-8b41-47f4-83cb-0ecae8281d06.png">
+
+<img width="582" alt="Screenshot 2022-12-04 at 6 21 27 PM" src="https://user-images.githubusercontent.com/96182727/206882521-faa2ad5b-ac38-4fbc-9272-2c65ca606076.png">
+
+<b> 5.2.2 Scenario: If no longer required to keep track of the patient condition with diabetes? </b>
+
+<img width="633" alt="Screenshot 2022-12-04 at 6 38 13 PM" src="https://user-images.githubusercontent.com/96182727/206882537-a19c2fd2-54ed-4994-866d-984dc9f49caa.png">
+
+<b> (6) SUMMARY </b>
+- Being new to SQL and coding this course and project has put me through a lot of learning, understanding the core concept of SQL and its wide applications. This project helped me learn the important concepts of developing a database from scratch and on how to overcome the real life challenges while developing a database. I learnt SQL commands from both the data query and data manipulation side along with the conceptual and logical ERD. We faced some issues while translating the conceptual ERD to logical ERD with foreign keys and partial primary keys but we learned together on how to solve it. The data insertion and table creation had some issues with the value assignment like using BIT operator or VARCHAR for certain data like Resident and Gender on the Patient table where we use only two values to determine the state. The query writing part was challenging for me as that part was making me think about all the possibilities of insights that can be derived from our database and its wide application in real life to solve the problems. We also made use of Excel sheets for initial data gathering and generation. It also helped us to keep track of the tables and the values that had to be entered on the table. We designed the database in a way that it can be put for real use in the future with the actual population data with very few minor changes. The database can be used as even a reference for future developments in the different domains and it can be expanded to derive useful insights. This can be used by the public health department to track the health condition of the patient both before and after getting vaccinated. The insights can be used to take precautionary measures and try to improve the vaccination status by various categories.
+
+- This project was an excellent experience in helping to understand the level of detail and preparation required to implement a professional-use relational database. It was extremely helpful to go through the sequential process of creating the conceptual ERD, then relational schema, then logical ERD, and I continued to return to these diagrams as I wrote my DML create-table commands. I also learned the importance of keeping performance and pertinent queries in mind when constructing the database design. For example, we struggled as a group on where to place data related to patient adverse reactions. Eventually, with Professor Song’s help, we placed this information on individual vaccine instances themselves as these are results of an individual vaccine dose, and this data, if not null, will always need to be queried together. Some of the difficulties we encountered as a group included formatting data into plain text for insert statements into our Oracle Database and mapping foreign-key to primary-key chains in our sample data. We originally created all sample data in an excel spreadsheet, and this created difficulties when trying to import the data through insert statements into the database due to unexpected (and oftentimes invisible) characters. We also had to be extremely careful when implementing the insert statements that were dependent on foreign key constraints. This was a lesson in the importance of having clean and well-checked data before attempting to insert into a database. If we had more time, I would have loved to conduct a more in-depth query from the publicly available Philadelphia Department of Public Health Database and attempt to process then import that data into our own database for practice with cleaning data and attempting larger and more complex queries.
+
+ <b> (7) References </b>
+
+- CDC. (2020, March 28). COVID Data Tracker. Centers for Disease Control and Prevention. https://covid.cdc.gov/covid-data-tracker/#vaccinations_vacc-people-additional-dose-totalpop 
+
+- COVID-19 Vaccine Dashboard. Department of Health. (n.d.). Retrieved October 26, 2022, from https://www.health.pa.gov/topics/disease/coronavirus/Vaccine/Pages/Dashboard.aspx 
+
+- Philavax. Philadelphia Immunization Program. (n.d.). Retrieved October 26, 2022, from https://vax.phila.gov/index.php/our-programs/philavax/  
+
+- Vaccine data | Programs and initiatives. (n.d.). City of Philadelphia. Retrieved October 26, 2022, from https://www.phila.gov/programs/coronavirus-disease-2019-covid-19/vaccines/vaccine-data/ 
