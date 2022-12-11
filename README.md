@@ -121,3 +121,9 @@ As the COVID-19 pandemic is still ongoing and continues to be a dynamic situatio
 - Vaccine Card - the activation date chosen was the same as the date of the first vaccine for each vaccinated patient that was tracked in the system, record numbers were generated in a random string generator 
 
 - Vaccine Dose - Data was randomly generated using a string generator. 
+
+<b> Conceptual ERD </b>
+
+
+
+![Project Conceptual ERD](https://user-images.githubusercontent.com/96182727/206881086-88eca4fd-a576-4e91-8d9c-7f78972f25e9.png)
